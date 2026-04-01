@@ -12,8 +12,7 @@ public class LegacyReportPrinter {
     public void printPayments(List<PaymentRecord> payments) {
         System.out.println("---- PAYMENTS ----");
         for (PaymentRecord p : payments) {
-            System.out.println(p.studentId + " | " + p.amount + " | " + p.method + " | " + p.status);
-        }
+            System.out.println(p.getStudentId() + " | " + p.getAmount() + " | " + p.getMethod() + " | " + p.getStatus());        }
     }
 
     public void printCourses(List<Course> courses) {
