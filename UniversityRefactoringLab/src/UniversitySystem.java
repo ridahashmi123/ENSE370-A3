@@ -101,6 +101,30 @@ public class UniversitySystem {
             }
         }
 
+        double fee = calculateFee(student, course, semester, paymentType);
+
+        student.outstandingBalance = student.outstandingBalance + fee;
+        Enrollment newEnrollment = new Enrollment(studentId, courseCode, semester, course.day, course.timeSlot);
+        enrollments.add(newEnrollment);
+        course.enrolled++;
+
+        System.out.println("Enrollment completed");
+        System.out.println("Student: " + student.name);
+        System.out.println("Course: " + course.title);
+        System.out.println("Semester: " + semester);
+        System.out.println("Fee charged: " + fee);
+        logs.add("Enrolled " + studentId + " into " + courseCode);
+
+        if (student.email != null && student.email.contains("@")) {
+            System.out.println("Email sent to " + student.email + ": enrolled in " + course.title);
+            logs.add("Enrollment email sent");
+        } else {
+            System.out.println("Invalid email");
+            logs.add("Invalid email for " + student.id);
+        }
+    }
+
+    private double calculateFee(Student student, Course course, String semester, String paymentType) {
         double fee = 0;
         if (student.type.equals("LOCAL")) {
             fee = course.creditHours * 300;
@@ -126,29 +150,10 @@ public class UniversitySystem {
             fee = fee + 200;
         }
 
-        if (courseCode.startsWith("SE")) {
+        if (course.code.startsWith("SE")) {
             fee = fee + 75;
         }
-
-        student.outstandingBalance = student.outstandingBalance + fee;
-        Enrollment newEnrollment = new Enrollment(studentId, courseCode, semester, course.day, course.timeSlot);
-        enrollments.add(newEnrollment);
-        course.enrolled++;
-
-        System.out.println("Enrollment completed");
-        System.out.println("Student: " + student.name);
-        System.out.println("Course: " + course.title);
-        System.out.println("Semester: " + semester);
-        System.out.println("Fee charged: " + fee);
-        logs.add("Enrolled " + studentId + " into " + courseCode);
-
-        if (student.email != null && student.email.contains("@")) {
-            System.out.println("Email sent to " + student.email + ": enrolled in " + course.title);
-            logs.add("Enrollment email sent");
-        } else {
-            System.out.println("Invalid email");
-            logs.add("Invalid email for " + student.id);
-        }
+        return fee;
     }
 
     public void assignGrade(String studentId, String courseCode, String semester, String grade) {
@@ -157,12 +162,7 @@ public class UniversitySystem {
                 e.grade = grade;
                 System.out.println("Grade assigned");
 
-                double points = 0;
-                if (grade.equals("A")) points = 4.0;
-                else if (grade.equals("B")) points = 3.0;
-                else if (grade.equals("C")) points = 2.0;
-                else if (grade.equals("D")) points = 1.0;
-                else if (grade.equals("F")) points = 0.0;
+                double points = getGradePoints(grade);
 
                 Student s = null;
                 Course c = null;
@@ -199,6 +199,16 @@ public class UniversitySystem {
                 }
             }
         }
+    }
+
+    private static double getGradePoints(String grade) {
+        double points = 0;
+        if (grade.equals("A")) points = 4.0;
+        else if (grade.equals("B")) points = 3.0;
+        else if (grade.equals("C")) points = 2.0;
+        else if (grade.equals("D")) points = 1.0;
+        else if (grade.equals("F")) points = 0.0;
+        return points;
     }
 
     public void processPayment(String studentId, double amount, String method) {
