@@ -5,6 +5,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         UniversitySystem system = new UniversitySystem();
+        ReportService reportService = new ReportService(system);
 
         while (true) {
             System.out.println("\n===== UNIVERSITY SYSTEM =====");
@@ -140,32 +141,29 @@ public class Main {
             } else if (choice == 7) {
                 System.out.print("Enter Student ID: ");
                 String sid = scanner.nextLine();
-                system.printTranscript(sid);
+                reportService.printTranscript(sid);
 
             } else if (choice == 8) {
                 System.out.print("Enter Course Code: ");
                 String ccode = scanner.nextLine();
-                system.printCourseRoster(ccode);
+                reportService.printCourseRoster(ccode);
 
             } else if (choice == 9) {
                 System.out.print("Enter Department Code (e.g., CS, SE, IT): ");
                 String dept = scanner.nextLine();
-                system.printDepartmentSummary(dept);
+                reportService.printDepartmentSummary(dept);
 
             } else if (choice == 10) {
-                system.sendWarningLetters();
+                reportService.sendWarningLetters();
 
             } else if (choice == 11) {
-                LegacyReportPrinter printer = new LegacyReportPrinter();
-                printer.printStudents(system.students);
+                reportService.printAllCourses();
 
             } else if (choice == 12) {
-                LegacyReportPrinter printer = new LegacyReportPrinter();
-                printer.printCourses(system.courses);
+                reportService.printAllStudents();
 
             } else if (choice == 13) {
-                LegacyReportPrinter printer = new LegacyReportPrinter();
-                printer.printPayments(system.payments);
+                reportService.printAllPayments();
 
             } else if (choice == 14) {
                 System.out.println("Exiting system...");
