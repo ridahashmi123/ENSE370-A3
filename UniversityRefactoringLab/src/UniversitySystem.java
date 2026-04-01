@@ -90,6 +90,7 @@ public class UniversitySystem {
         }
 
         double fee = calculateFee(student, course, semester, paymentType);
+        StudentType studentType = StudentType.valueOf(student.type);
 
         student.outstandingBalance = student.outstandingBalance + fee;
         Enrollment newEnrollment = new Enrollment(studentId, courseCode, semester, course.day, course.timeSlot);
@@ -114,21 +115,24 @@ public class UniversitySystem {
 
     private double calculateFee(Student student, Course course, String semester, String paymentType) {
         double fee = 0;
-        if (student.type.equals("LOCAL")) {
+        StudentType studentType = StudentType.valueOf(student.type);
+
+        if (studentType == StudentType.LOCAL) {
             fee = course.creditHours * 300;
-        } else if (student.type.equals("INTERNATIONAL")) {
+        } else if (studentType == StudentType.INTERNATIONAL) {
             fee = course.creditHours * 550;
-        } else if (student.type.equals("SCHOLARSHIP")) {
+        } else if (studentType == StudentType.SCHOLARSHIP) {
             fee = course.creditHours * 100;
         } else {
             fee = course.creditHours * 300;
         }
 
-        if (paymentType.equals("INSTALLMENT")) {
+        PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentType);
+        if (paymentMethod == PaymentMethod.INSTALLMENT) {
             fee = fee + 50;
-        } else if (paymentType.equals("CARD")) {
+        } else if (paymentMethod == PaymentMethod.CARD) {
             fee = fee + 10;
-        } else if (paymentType.equals("CASH")) {
+        } else if (paymentMethod == PaymentMethod.CASH) {
             fee = fee + 0;
         } else {
             fee = fee + 100;
